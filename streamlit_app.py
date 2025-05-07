@@ -3,15 +3,26 @@ import pandas as pd
 from gensim.models.doc2vec import Doc2Vec
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import gdown
+import os
 
-# Загрузка данных и моделей
+# Загрузка модели из локального файла (если на GitHub)
 @st.cache_resource
 def load_model():
-    return Doc2Vec.load("recipes_doc2vec.model")
+    return Doc2Vec.load("models/recipes_doc2vec.model")
 
+# Загрузка данных
 @st.cache_data
 def load_data():
-    df = pd.read_csv("df_sample.csv")
+    # Google Drive: df_sample.csv
+    file_id = "1tzyLDoc0b-iYTmRy5e34AppFzrQEYDd-"
+    url = f"https://drive.google.com/uc?id={file_id}"
+    output_path = "df_sample.csv"
+
+    if not os.path.exists(output_path):
+        gdown.download(url, output_path, quiet=False)
+
+    df = pd.read_csv(output_path)
     df_cf = pd.read_csv("recipe_cf_embeddings.csv", index_col=0)
     df['RecipeId'] = df['RecipeId'].astype(int)
     return df, df_cf
