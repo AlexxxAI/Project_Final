@@ -3,3 +3,4 @@ pandas
 numpy
 scikit-learn
 gensim
+scipy>=1.11
